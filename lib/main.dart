@@ -30,7 +30,7 @@ class MyHomePage extends StatefulWidget {
 
 class _MyHomePageState extends State<MyHomePage> {
   static var _message = 'ok.';
-  static var _selected = 'Child 1';
+  static var _value = 0.0;
 
   @override
   Widget build(BuildContext context) {
@@ -58,32 +58,24 @@ class _MyHomePageState extends State<MyHomePage> {
             Padding(
               padding: EdgeInsets.all(20.0),
             ),
-            Align(
-              alignment: Alignment.centerRight,
-              child: PopupMenuButton(
-                onSelected: (String value)=> popupSelected(value),
-                itemBuilder: (BuildContext context) =>
-                <PopupMenuEntry<String>>[
-                  const PopupMenuItem<String>(value: "Child 1",
-                  child: const Text("Child 1")),
-                  const PopupMenuItem<String>(value: "Child 2",
-                  child: const Text("Child 2")),
-                  const PopupMenuItem<String>(value: "Child 3",
-                  child: const Text("Child 3")),
-                ]
-              ),
+            Slider(
+              key: null, 
+              onChanged: sliderChanged, 
+              min: 0.0,
+              max: 100.0,
+              divisions: 20,
+              value: _value,
             ),
           ]
-  
         ),
       ),
     );
   }
 
-  void popupSelected(String value) {
+  void sliderChanged(double value) {
     setState(() {
-      _selected = value ?? 'not selected...';
-      _message = 'select: $_selected';
+      _value = value.floorToDouble();
+      _message = 'set velue: $_value';
     });
   }
 }

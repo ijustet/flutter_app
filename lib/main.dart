@@ -30,7 +30,6 @@ class MyHomePage extends StatefulWidget {
 
 class _MyHomePageState extends State<MyHomePage> {
   static var _message = 'ok.';
-  static var _value = 0.0;
 
   @override
   Widget build(BuildContext context) {
@@ -42,7 +41,7 @@ class _MyHomePageState extends State<MyHomePage> {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.start,
           mainAxisSize: MainAxisSize.max,
-          crossAxisAlignment: CrossAxisAlignment.center,
+          crossAxisAlignment: CrossAxisAlignment.stretch,
           children: <Widget>[
             Padding(
               padding: EdgeInsets.all(20.0),
@@ -58,13 +57,19 @@ class _MyHomePageState extends State<MyHomePage> {
             Padding(
               padding: EdgeInsets.all(20.0),
             ),
-            Slider(
-              key: null, 
-              onChanged: sliderChanged, 
-              min: 0.0,
-              max: 100.0,
-              divisions: 20,
-              value: _value,
+            Padding(
+              padding: EdgeInsets.all(10.0),
+              child: RaisedButton(
+                onPressed: buttonOnpressed,
+                child: Text(
+                  "tap me",
+                  style: TextStyle(
+                    fontSize: 32.0,
+                    fontWeight: FontWeight.w400,
+                    fontFamily: "Roboto"
+                  ),
+                ),
+              ),
             ),
           ]
         ),
@@ -72,10 +77,28 @@ class _MyHomePageState extends State<MyHomePage> {
     );
   }
 
-  void sliderChanged(double value) {
-    setState(() {
-      _value = value.floorToDouble();
-      _message = 'set velue: $_value';
+  void buttonOnpressed() {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) => AlertDialog(
+        title: Text("Hello!"),
+        content: Text("This is sample."),
+        actions: <Widget>[
+          FlatButton(
+            child: const Text('Cancel'),
+            onPressed: () => Navigator.pop<String>(context,'Cancel')
+          ),
+          FlatButton(
+            child: const Text('OK'),
+            onPressed: () => Navigator.pop<String>(context,'OK')
+          ),
+        ],
+      )
+    ).then<void>((value) => resultAlert(value));
+  }
+  void resultAlert(String value) {
+    setState((){
+      _message = 'selected: $value';
     });
   }
 }

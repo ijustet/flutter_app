@@ -30,75 +30,95 @@ class MyHomePage extends StatefulWidget {
 
 class _MyHomePageState extends State<MyHomePage> {
   static var _message = 'ok.';
+  static var _stars = '☆☆☆☆☆';
+  static var _star = 0;
+  static var _index = 0;
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('App Name'),
-      ),
-      body: Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.start,
-          mainAxisSize: MainAxisSize.max,
-          crossAxisAlignment: CrossAxisAlignment.stretch,
-          children: <Widget>[
-            Padding(
-              padding: EdgeInsets.all(20.0),
-              child: Text(
-                _message,
-                style: TextStyle(
-                  fontSize: 32.0,
-                  fontWeight: FontWeight.w400,
-                  fontFamily: "Roboto"
-                ),
-              ),
-            ),
-            Padding(
-              padding: EdgeInsets.all(20.0),
-            ),
-            Padding(
-              padding: EdgeInsets.all(10.0),
-              child: RaisedButton(
-                onPressed: buttonOnpressed,
-                child: Text(
-                  "tap me",
-                  style: TextStyle(
-                    fontSize: 32.0,
-                    fontWeight: FontWeight.w400,
-                    fontFamily: "Roboto"
-                  ),
-                ),
-              ),
-            ),
-          ]
+        title: Text('My app'),
+        leading: BackButton(
+          color: Colors.white,
         ),
+        actions: <Widget>[
+          IconButton(
+            icon: Icon(Icons.android), 
+            tooltip: 'add star...',
+            onPressed: iconPressedA,
+          ),
+          IconButton(
+            icon: Icon(Icons.favorite), 
+            tooltip: 'subtract star...',
+            onPressed: iconPressedB,
+          ),
+        ],
+        bottom: PreferredSize(
+          child: Center(
+            child:Text(_stars,
+              style: TextStyle(
+                fontSize: 22.0,
+                color: Colors.white
+              ),
+            )
+          ), 
+          preferredSize: const Size.fromHeight(30.0)
+        ),
+      ),
+      
+      body: Center(
+        child: Text(
+          _message,
+          style: const TextStyle(
+            fontSize: 28.0
+          ),
+        )
+      ),
+      bottomNavigationBar: BottomNavigationBar(
+        currentIndex: _index,
+        backgroundColor: Colors.lightBlueAccent,
+        items:  <BottomNavigationBarItem>[
+          BottomNavigationBarItem(
+            title: Text('Android'),
+            icon: const Icon(Icons.android,color: Colors.black,size: 50),
+          ),
+          BottomNavigationBarItem(
+            title: Text('Favorite'),
+            icon: const Icon(Icons.favorite,color: Colors.red,size: 50),
+          ),
+          BottomNavigationBarItem(
+            title: Text('Home'),
+            icon: const Icon(Icons.home,color: Colors.white,size: 50),
+          ),
+        ],
+        onTap: tapBottomIcon,
+  
       ),
     );
   }
-
-  void buttonOnpressed() {
-    showDialog(
-      context: context,
-      builder: (BuildContext context) => AlertDialog(
-        title: Text("Hello!"),
-        content: Text("This is sample."),
-        actions: <Widget>[
-          FlatButton(
-            child: const Text('Cancel'),
-            onPressed: () => Navigator.pop<String>(context,'Cancel')
-          ),
-          FlatButton(
-            child: const Text('OK'),
-            onPressed: () => Navigator.pop<String>(context,'OK')
-          ),
-        ],
-      )
-    ).then<void>((value) => resultAlert(value));
+  void tapBottomIcon(int value){
+    var items = ['android','Heart','Home'];
+    setState(() {
+      _index = value;
+      _message = 'you tapped: "'+ items[_index] +'".';
+    });
   }
-  void resultAlert(String value) {
-    setState((){
-      _message = 'selected: $value';
+  void iconPressedA(){
+    _message = 'tap "android".';
+    _star++;
+    update();
+  }
+  void iconPressedB(){
+    _message = 'tap "favorite".';
+    _star--;
+    update();
+  }
+  void update(){
+    _star = _star < 0 ? 0 : _star > 5 ? 5 : _star;
+    setState(() {
+      _stars = '★★★★★☆☆☆☆☆'.substring(5 - _star, 5 - _star + 5);
+      _message = _message + '[$_star]';
     });
   }
 }

@@ -14,22 +14,18 @@ class MyApp extends StatelessWidget {
         primaryColor: const Color(0xff2196f3),
         canvasColor: const Color(0xFFfafafa),
       ),
-      home: new FirstScreen(),
+      initialRoute: '/',
+      routes: {
+        '/' : (context) => FirstScreen(),
+        '/second' : (context) => SecondScreen('Second'),
+        '/third' : (context) => SecondScreen('Third'),
+      },
     );
   }
 }
 
-class FirstScreen extends StatefulWidget {
-  FirstScreen({Key? key}): super(key:key);
+class FirstScreen extends StatelessWidget {
 
-  @override
-  _FirstScreenState createState() => _FirstScreenState();
-}
-
-class _FirstScreenState extends State<FirstScreen> {
-  static final _controller = TextEditingController();
-  static var _input = "";
-  
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -41,14 +37,6 @@ class _FirstScreenState extends State<FirstScreen> {
           const Text(
             'Home Screen',
             style: const TextStyle(fontSize: 32),
-          ),
-          Padding(
-            padding: const EdgeInsets.all(20.0),
-            child: TextField(
-              controller: _controller,
-              style: const TextStyle(fontSize: 28),
-              onChanged: changeField,
-            ),
           ),
         ],
       ),
@@ -66,20 +54,14 @@ class _FirstScreenState extends State<FirstScreen> {
         ],
         onTap: (int value){
           if(value == 1)
-            Navigator.push(
-              context,
-              MaterialPageRoute(builder: (context) => SecondScreen(_input)),
-            );
+            Navigator.pushNamed(context, '/second');
         },
       ),
     );
   }
-
-  void changeField(String val) => _input = val;
 }
 class SecondScreen extends StatelessWidget {
   final String _value;
-  
   SecondScreen(this._value);
 
   @override
@@ -90,7 +72,7 @@ class SecondScreen extends StatelessWidget {
       ),
       body: Center(
         child: Text(
-          'you typed: "$_value".', 
+          '$_value Screen', 
           style: const TextStyle(fontSize: 32.0),
         ),
       ),
@@ -108,6 +90,7 @@ class SecondScreen extends StatelessWidget {
         ],
         onTap: (int value){
           if(value == 0) Navigator.pop(context);
+          if(value == 1) Navigator.pushNamed(context, '/third');
         },
       ),
     );

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'dart:ui' as ui;
 
 void main() {
   runApp(MyApp());
@@ -28,54 +29,47 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
-  static var _items = <Widget>[];
-  static var _message = 'ok.';
-  static var _tapped = 0;
-
-  @override
-  void initState() {
-    super.initState();
-    for (var i = 0; i < 5; i++) {
-      var item = ListTile(
-          leading: const Icon(Icons.android),
-          title: Text('No, $i'),
-          onTap: (){
-            _tapped = i;
-            tapItem();
-          }
-      );
-      _items.add(item);
-    }
-  }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: Color.fromARGB(255, 255, 255, 255),
       appBar: AppBar(
-        title: const Text('Flutter App'),
+        title: Text('App Name', style: TextStyle(fontSize: 30.0),),
       ),
-      body: Center(
-        child: Text(
-          _message,
-          style: const TextStyle(
-            fontSize: 32.0,
-          ),
-        ),
-      ),
-      drawer: Drawer(
-        child: ListView(
-          shrinkWrap: true,
-          padding: const EdgeInsets.all(20.0),
-          children: _items,
+      body:Container(
+        child: CustomPaint(
+          painter: MyPainter(),
         ),
       ),
     );
   }
+}
 
-  void tapItem() {
-    Navigator.pop(context);
-    setState((){
-      _message = 'tapped:[$_tapped]';
-    });
+class MyPainter extends CustomPainter{
+
+  @override
+  void paint(Canvas canvas, Size size) {
+    Paint p = Paint();
+
+    ui.ParagraphBuilder builder = ui.ParagraphBuilder(
+      ui.ParagraphStyle(textDirection: TextDirection.ltr),
+    )
+      ..pushStyle(ui.TextStyle(color: Colors.red, fontSize: 48.0))
+      ..addText('Hello! ')
+      ..pushStyle(ui.TextStyle(color: Colors.blue[700], fontSize: 30.0))
+      ..addText('This is a sample of paragraph text. ')
+      ..pushStyle(ui.TextStyle(color: Colors.blue[200], fontSize: 30.0))
+      ..addText('You can draw MULTI-FONT text!');
+
+    ui.Paragraph paragraph = builder.build()
+      ..layout(ui.ParagraphConstraints(width: 300.0));
+
+    Offset off = Offset(50.0, 50.0);
+    canvas.drawParagraph(paragraph, off);
   }
+
+
+  @override
+  bool shouldRepaint(CustomPainter oldDelegate) => true;
 }
